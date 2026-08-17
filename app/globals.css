@@ -1,26 +1,96 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --paper: #fafaf7;
+  --paper-raised: #ffffff;
+  --ink: #1b1b18;
+  --ink-soft: #5b5850;
+  --ink-faint: #8c887d;
+  --rule: #dcd9cf;
+  --rule-strong: #c7c3b6;
+  --accent: #2b3a67;
+  --accent-strong: #1c2748;
+  --accent-soft: #e8eaf2;
+  --match-good: #3f6c4b;
+  --match-good-soft: #e4efe6;
+  --match-warn: #a6631b;
+  --match-warn-soft: #f5e9da;
+  --match-bad: #8c3b3b;
+  --match-bad-soft: #f3e3e1;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --paper: #14130f;
+    --paper-raised: #1c1a15;
+    --ink: #ede9df;
+    --ink-soft: #b3ae9f;
+    --ink-faint: #7d7969;
+    --rule: #34312a;
+    --rule-strong: #45412f;
+    --accent: #8b9ad1;
+    --accent-strong: #aab6dd;
+    --accent-soft: #232a41;
+    --match-good: #7fb08c;
+    --match-good-soft: #1e2c22;
+    --match-warn: #d69a52;
+    --match-warn-soft: #2e2417;
+    --match-bad: #cf8b8b;
+    --match-bad-soft: #2e1e1e;
   }
 }
 
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-match-good: var(--match-good);
+  --color-match-good-soft: var(--match-good-soft);
+  --color-match-warn: var(--match-warn);
+  --color-match-warn-soft: var(--match-warn-soft);
+  --color-match-bad: var(--match-bad);
+  --color-match-bad-soft: var(--match-bad-soft);
+  --font-display: var(--font-source-serif);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+* {
+  border-color: var(--rule);
+}
+
+html {
+  color-scheme: light dark;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

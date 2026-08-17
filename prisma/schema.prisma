@@ -1,0 +1,162 @@
+// Prisma schema for the Resume Builder app.
+// Memory bank models (Profile/Experience/Bullet/Project/Education/Certification/Skill)
+// hold the user's real, factual work history. Tailoring only ever selects and
+// lightly rewrites from these — it never invents new facts.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+
+  profile        Profile?
+  experiences    Experience[]
+  projects       Project[]
+  educations     Education[]
+  certifications Certification[]
+  skills         Skill[]
+  applications   Application[]
+}
+
+model Profile {
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName  String?
+  headline  String?
+  phone     String?
+  location  String?
+  email     String?
+  linkedin  String?
+  github    String?
+  website   String?
+  summary   String?
+}
+
+model Experience {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company   String
+  title     String
+  location  String?
+  startDate String
+  endDate   String?
+  current   Boolean   @default(false)
+  bullets   Bullet[]
+  createdAt DateTime  @default(now())
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  link        String?
+  startDate   String?
+  endDate     String?
+  bullets     Bullet[]
+  createdAt   DateTime  @default(now())
+}
+
+// The atomic reusable unit of "memory": one factual, tag-able accomplishment.
+// Tailoring selects a subset per application and may lightly rephrase wording,
+// never the underlying facts.
+model Bullet {
+  id           String      @id @default(cuid())
+  text         String
+  tags         String // comma-separated skill tags
+  experienceId String?
+  experience   Experience? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  projectId    String?
+  project      Project?    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now())
+}
+
+model Education {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school    String
+  degree    String
+  field     String?
+  startDate String?
+  endDate   String?
+  gpa       String?
+}
+
+model Certification {
+  id       String  @id @default(cuid())
+  userId   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name     String
+  issuer   String?
+  date     String?
+}
+
+model Skill {
+  id       String  @id @default(cuid())
+  userId   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name     String
+  category String?
+}
+
+enum ApplicationStatus {
+  SAVED
+  APPLIED
+  INTERVIEW
+  OFFER
+  REJECTED
+}
+
+model Application {
+  id              String            @id @default(cuid())
+  userId          String
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company         String
+  role            String
+  jobDescription  String
+  status          ApplicationStatus @default(SAVED)
+  appliedDate     DateTime?
+  followUpDate    DateTime?
+  notes           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  resumes       Resume[]
+  coverLetters  CoverLetter[]
+}
+
+model Resume {
+  id               String      @id @default(cuid())
+  applicationId    String
+  application      Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  templateId       String      @default("classic")
+  contentJson      String
+  matchScoreBefore Float?
+  matchScoreAfter  Float?
+  missingKeywords  String?
+  texPath          String?
+  pdfPath          String?
+  createdAt        DateTime    @default(now())
+}
+
+model CoverLetter {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  content       String
+  createdAt     DateTime    @default(now())
+}

@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+# generated skill fan-out (source of truth is skills-lock.json)
+/.claude/
+/.agents/
+/.windsurf/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -39,3 +44,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/app/generated/prisma
+
+# database
+/dev.db
+/dev.db-journal
+/prisma/dev.db
+/prisma/dev.db-journal
+
+# generated resume files
+/storage/
+
+# tectonic binary (downloaded during setup, not vendored in git)
+/tools/tectonic/*.exe
+/tools/tectonic/*.zip
+
